@@ -2021,18 +2021,6 @@ func TestApplyViewQueryStaleOptions(t *testing.T) {
 
 }
 
-func TestParseCouchbaseServerVersion(t *testing.T) {
-
-	major, minor, micro, err := ParseCouchbaseServerVersion("4.1.0-5005")
-	if err != nil {
-		t.Fatalf("Unexpected error: %v", err)
-	}
-	goassert.Equals(t, major, uint64(4))
-	goassert.Equals(t, minor, uint64(1))
-	goassert.Equals(t, micro, "0-5005")
-
-}
-
 // Make sure that calling CouchbaseServerVersion against actual couchbase server does not return an error
 func TestCouchbaseServerVersion(t *testing.T) {
 
@@ -2044,10 +2032,9 @@ func TestCouchbaseServerVersion(t *testing.T) {
 	defer testBucket.Close()
 	bucket := testBucket.Bucket
 
-	_, _, _, err := bucket.CouchbaseServerVersion()
-	if err != nil {
-		t.Fatalf("Unexpected error: %v", err)
-	}
+	major, _, _, err := bucket.CouchbaseServerVersion()
+	assert.NoError(t, err)
+	assert.NotZero(t, major)
 
 }
 
